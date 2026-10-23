@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Outpass</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f6ebe8;--card:#fff;--ink:#16141f;--mute:#5f5a70;--line:#e5d8dc;--brand:#5560c4;--brand-ink:#fff;--amber:#ef9a73;--ok:#157a45;--okbg:#dff3e6;--bad:#b3261e;--badbg:#fbe3e0;--warn:#8a5a00;--warnbg:#fdf0cf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#15121f;--card:#262239;--ink:#f0eefc;--mute:#b0abcc;--line:#3a3654;--brand:#9ba3f6;--brand-ink:#13102b;--okbg:#12361f;--badbg:#3d1714;--warnbg:#3a2c08;--ok:#59d08a;--bad:#ff8a80;--warn:#f2c35a}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#15121f;--card:#262239;--ink:#f0eefc;--mute:#b0abcc;--line:#3a3654;--brand:#9ba3f6;--brand-ink:#13102b;--okbg:#12361f;--badbg:#3d1714;--warnbg:#3a2c08;--ok:#59d08a;--bad:#ff8a80;--warn:#f2c35a}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:linear-gradient(135deg,rgba(255,226,214,.6),rgba(218,220,250,.5)),var(--bg);background-attachment:fixed;min-height:100vh;color:var(--ink);font:400 16px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:Lexend,Figtree,system-ui,sans-serif;margin:0;line-height:1.15}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800}h2{font-size:1.3rem;font-weight:700}h3{font-size:1.05rem;font-weight:700}
+.wrap{max-width:960px;margin:0 auto;padding:16px}
+header.top{background:color-mix(in srgb,var(--brand) 78%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border-bottom:1px solid rgba(255,255,255,.25);color:var(--brand-ink);position:sticky;top:0;z-index:5}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px}
+.logo{font:700 1.25rem Lexend,sans-serif;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.logo i{width:22px;height:22px;border-radius:50% 50% 50% 4px;background:var(--amber);display:inline-block}
+.chip{font-size:.85rem;background:rgba(255,255,255,.16);padding:6px 12px;border-radius:99px}
+button,.btn{font:600 1rem Figtree,sans-serif;min-height:44px;padding:0 18px;border-radius:10px;border:1.5px solid var(--brand);background:var(--brand);color:var(--brand-ink);cursor:pointer}
+button.ghost{background:transparent;color:var(--brand)}button.bad{background:var(--bad);border-color:var(--bad);color:#fff}button.link{border:0;background:none;color:inherit;text-decoration:underline;min-height:44px;padding:0 8px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.card{background:color-mix(in srgb,var(--card) 68%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.55);box-shadow:0 8px 28px rgba(20,80,72,.12),inset 0 1px 0 rgba(255,255,255,.6);border-radius:20px;padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+label{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+input,select,textarea{width:100%;min-height:44px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.mute{color:var(--mute);font-size:.9rem}
+.sp{justify-content:space-between}
+.tag{display:inline-block;font-size:.8rem;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--line)}
+.tag.ok{background:var(--okbg);color:var(--ok)}.tag.bad{background:var(--badbg);color:var(--bad)}.tag.warn{background:var(--warnbg);color:var(--warn)}
+.track{display:flex;gap:4px;margin:12px 0 4px;overflow-x:auto;padding-bottom:4px}
+.step{flex:1;min-width:84px;font-size:.78rem;text-align:center}
+.step b{display:block;height:8px;border-radius:4px;background:var(--line);margin-bottom:5px}
+.step.done b{background:var(--ok)}.step.cur b{background:var(--amber)}.step.rej b{background:var(--bad)}
+.step.cur,.step.rej{font-weight:700}
+.hero{padding:28px 0 8px}.hero p{max-width:52ch;color:var(--mute)}
+.who{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:16px}
+.who button{text-align:left;height:auto;padding:14px 16px;border-radius:16px;background:color-mix(in srgb,var(--card) 68%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:var(--ink);border-color:rgba(255,255,255,.55)}
+.who button:hover{border-color:var(--brand)}.who small{display:block;color:var(--mute);font-weight:400}
+/* the pass: boarding-pass ticket with perforation */
+.ticket{background:color-mix(in srgb,var(--card) 74%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 14px 40px rgba(20,80,72,.2);border-radius:24px;border:1px solid rgba(255,255,255,.55);overflow:hidden;max-width:460px;margin:16px auto;position:relative}
+.banner{padding:18px 20px;font:700 1.6rem Lexend,sans-serif;display:flex;justify-content:space-between;align-items:center}
+.banner span{font:500 .85rem Figtree}
+.banner.ok{background:var(--ok);color:#fff}.banner.bad{background:var(--bad);color:#fff}.banner.warn{background:var(--amber);color:#2b1d00}
+.tbody{padding:18px 20px}
+.perf{height:0;border-top:2px dashed var(--line);margin:0 18px;position:relative}
+.perf:before,.perf:after{content:"";position:absolute;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.perf:before{left:-30px}.perf:after{right:-30px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:12px 0}.kv div small{display:block;color:var(--mute);font-size:.78rem}.kv div{font-weight:600}
+.qr{display:grid;place-items:center;padding:18px}.qr .box{background:#fff;padding:12px;border-radius:12px}
+.code{font:700 1.6rem Lexend,sans-serif;letter-spacing:.14em;text-align:center}
+.trail{list-style:none;padding:0;margin:8px 0}.trail li{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.full{position:fixed;inset:0;background:#fff;color:#000;z-index:20;display:grid;place-items:center;align-content:center;gap:14px;filter:none}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;z-index:30;max-width:90vw;font-size:.92rem}
+.verdict{border-radius:14px;padding:16px;margin:12px 0;font-weight:600}.verdict.ok{background:var(--okbg);color:var(--ok)}.verdict.bad{background:var(--badbg);color:var(--bad)}.verdict.warn{background:var(--warnbg);color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.isauth header.top{display:none}
+.auth{position:relative;isolation:isolate;overflow:hidden;min-height:100vh;display:grid;place-items:center;text-align:center;padding:28px 16px;color:#fff}
+.auth:before{content:"";position:absolute;inset:-20px;z-index:-2;filter:blur(7px);background:linear-gradient(#cfd6cf,#cfd6cf) 12% 30%/22% 14% no-repeat,linear-gradient(#b9c3bd,#b9c3bd) 40% 52%/18% 12% no-repeat,linear-gradient(#dfe3dc,#dfe3dc) 68% 22%/20% 16% no-repeat,linear-gradient(#aeb9b2,#aeb9b2) 80% 66%/16% 18% no-repeat,linear-gradient(#c8d0c8,#c8d0c8) 22% 74%/24% 12% no-repeat,linear-gradient(160deg,#2c4a33,#1b2b22)}
+.auth:after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(5,8,8,.7)}
+.auth h1{font:700 clamp(1.7rem,5vw,3rem)/1.15 Lexend,sans-serif}
+.ai{font-style:italic;font-size:clamp(1.1rem,3vw,1.5rem);margin:14px 0 24px}
+.rcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;max-width:680px;margin:0 auto}
+.rc{height:150px;border:2px solid #fff;border-radius:12px;background:rgba(0,0,0,.25);color:#fff;display:grid;place-items:center;align-content:center;gap:10px;font-size:1.05rem}
+.rc:hover{background:rgba(255,255,255,.14)}
+.cols{display:flex;gap:28px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.sm{font-size:.9rem;margin:0 0 8px}
+.ac{border:2px solid #fff;border-radius:18px;padding:22px 24px;background:rgba(0,0,0,.4);width:min(340px,86vw);text-align:left;display:grid;gap:14px}
+.ac input,.ac select{background:transparent;border:0;border-bottom:2px solid #f5e1c8;border-radius:0;color:#fff;padding:8px 2px}
+.ac input::placeholder{color:#f5e1c8;opacity:.9}.ac select{color:#f5e1c8}.ac select option{color:#000}
+.pill{border:2px solid #f5e1c8;border-radius:99px;background:transparent;color:#fff;width:100%}.pill:hover{background:rgba(245,225,200,.2)}
+.lnk{background:none;border:0;color:#5ee7ff;text-decoration:underline;min-height:44px;padding:0 8px;font-size:.92rem}
+.err{color:#ffb4ab;font-weight:600;margin:0;min-height:1.2em;font-size:.9rem}
+.demo{max-width:520px;margin:20px auto 0;text-align:left;background:rgba(0,0,0,.4);border-radius:12px;padding:8px 14px}.demo summary{min-height:44px;display:flex;align-items:center;cursor:pointer}.demo td{border-color:rgba(255,255,255,.2)}
+.auth:before{inset:0;filter:none;background:radial-gradient(45vw 45vw at 12% 15%,rgba(120,220,200,.35),transparent 70%),radial-gradient(40vw 40vw at 90% 20%,rgba(139,92,246,.22),transparent 70%),radial-gradient(45vw 45vw at 65% 95%,rgba(255,255,255,.12),transparent 70%),linear-gradient(160deg,#2f7a70,#1d4f48)}
+.auth:after{background:rgba(5,30,27,.15)}
+.rc,.ac,.demo{background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(255,255,255,.45);box-shadow:0 12px 40px rgba(10,8,40,.35),inset 0 1px 0 rgba(255,255,255,.5);border-radius:22px}
+.rc:hover{background:rgba(255,255,255,.24)}
+.ac input,.ac select{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);border-radius:12px;color:#fff;padding:8px 14px}
+.ac input::placeholder{color:rgba(255,255,255,.85)}.ac select{color:rgba(255,255,255,.92)}
+.pill{background:#fff;color:#1f5a52;border:0;font-weight:700}.pill:hover{background:#dff6f1}
+.lnk{color:#c7f4ff}.err{color:#fff;text-shadow:0 1px 3px rgba(120,0,30,.9)}
+.rc small{opacity:.85;font-size:.78rem;font-weight:400}
+.av{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.who2{display:grid;line-height:1.15;font-size:.9rem}.who2 small{opacity:.85;font-size:.75rem}
+header.top .link{border:1px solid rgba(255,255,255,.5);border-radius:10px;text-decoration:none;min-height:38px}
+.ph{margin:6px 0 14px}.ph h2{font-size:1.6rem}.ph p{margin:4px 0 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:0 0 6px}
+.stat{background:color-mix(in srgb,var(--card) 68%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.55);border-radius:16px;padding:14px 16px;box-shadow:0 8px 24px rgba(20,80,72,.1)}
+.stat b{display:block;font:700 1.9rem Lexend,sans-serif;line-height:1.1;color:var(--brand)}.stat span{font-size:.85rem;color:var(--mute)}
+@media (max-width:520px){.who2{display:none}}
+.rcs{grid-template-columns:repeat(3,1fr);max-width:600px}.rc{height:140px}
+.rc svg{width:56px;height:56px;padding:11px;border-radius:50%}
+.rc:nth-child(1) svg{background:#8b5cf6}.rc:nth-child(2) svg{background:#ef4b4b}.rc:nth-child(3) svg{background:#2fa8d8}.rc:nth-child(4) svg{background:#e08a0b}.rc:nth-child(5) svg{background:#2a9d8a}.rc:nth-child(6) svg{background:#5b5fd6}
+header.top{background:color-mix(in srgb,var(--card) 82%,transparent);color:var(--ink);border-bottom:1px solid var(--line)}
+header.top .av{background:var(--brand);color:var(--brand-ink)}
+header.top .link{border:1px solid var(--brand);color:var(--brand);background:transparent;border-radius:99px;padding:0 16px}
+.land{padding-bottom:110px}
+.hero2{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;max-width:1040px;width:100%;text-align:left}
+.lt h1{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1.05}
+.lt .ai{font-style:normal;margin:16px 0 22px;max-width:44ch;opacity:.92;font-size:1.1rem}
+.land .rcs{grid-template-columns:repeat(3,1fr);max-width:none;margin:0;gap:12px}
+.land .rc{height:auto;min-height:128px;padding:12px 8px;border-radius:18px;transition:transform .2s,background .2s}.land .rc:hover{transform:translateY(-3px)}
+.land .rc svg{width:42px;height:42px;padding:8px}.land .rc small{font-size:.72rem}
+.pass3{justify-self:center;width:min(290px,100%);transform:rotate(3deg);animation:flt 6s ease-in-out infinite}
+.pt{background:#fff;color:#0b1a19;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.pb{background:#157a45;color:#fff;font:700 1.5rem Lexend,sans-serif;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.pb span{font:500 .72rem Figtree,sans-serif}
+.pbody{padding:14px 18px}.pbody b{font:700 1.1rem Lexend,sans-serif;display:block}.pbody small{color:#52696a;font-size:.78rem}
+.pkv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;font-weight:600;font-size:.88rem}.pkv small{display:block}
+.pperf{border-top:2px dashed #cfe3df;margin:0 14px;position:relative}
+.pperf:before,.pperf:after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:#2a6a61}.pperf:before{left:-24px}.pperf:after{right:-24px}
+.pqr{width:112px;margin:14px auto 4px}.pcode{text-align:center;font:700 1.1rem Lexend,sans-serif;letter-spacing:.14em}
+.chain{list-style:none;display:flex;justify-content:space-between;margin:12px 12px 14px;padding:0;font-size:.6rem;color:#52696a}
+.chain li{display:grid;justify-items:center;gap:4px}
+.chain li:before{content:"";width:10px;height:10px;border-radius:50%;background:#cfe3df;animation:lit .4s ease forwards;animation-delay:calc(.5s + var(--i)*.35s)}
+.wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:90px}
+@keyframes flt{50%{transform:rotate(1deg) translateY(-10px)}}@keyframes lit{to{background:#157a45}}
+@media (max-width:820px){.hero2{grid-template-columns:1fr;gap:28px}.pass3{transform:none;animation:none}}
+@media (max-width:520px){.land .rcs{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.pass3{animation:none}.chain li:before{animation:none;background:#157a45}}
+/* liquid glass theme: blush backdrop, 3D spheres, frosted panels */
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle 95px at calc(78% - 55px) calc(4% - 55px),rgba(255,255,255,.7),transparent 70%),radial-gradient(circle 170px at 78% 4%,#ffe3d4 0,#f7b794 55%,#ec9068 97%,transparent 100%),radial-gradient(circle 60px at calc(2% - 35px) calc(24% - 35px),rgba(255,255,255,.7),transparent 70%),radial-gradient(circle 110px at 2% 24%,#e3e6ff 0,#b4bbf3 55%,#8a92e2 97%,transparent 100%),radial-gradient(circle 125px at calc(90% - 80px) calc(96% - 80px),rgba(255,255,255,.7),transparent 70%),radial-gradient(circle 230px at 90% 96%,#e3e6ff 0,#b4bbf3 55%,#8a92e2 97%,transparent 100%),radial-gradient(circle 44px at calc(10% - 25px) calc(90% - 25px),rgba(255,255,255,.7),transparent 70%),radial-gradient(circle 80px at 10% 90%,#ffe3d4 0,#f7b794 55%,#ec9068 97%,transparent 100%),radial-gradient(circle 55px at 99% 30%,#e3e6ff 0,#b4bbf3 55%,#8a92e2 97%,transparent 100%)}
+button{box-shadow:0 6px 16px rgba(85,96,196,.28)}button.ghost,button.link,.lnk{box-shadow:none}
+.card,.stat,.ticket,.rc,.ac,.demo,.lt{background:color-mix(in srgb,var(--card) 48%,transparent);-webkit-backdrop-filter:blur(26px) saturate(1.3);backdrop-filter:blur(26px) saturate(1.3);border:1.5px solid color-mix(in srgb,#fff 80%,transparent);box-shadow:0 0 0 1px rgba(110,100,130,.2),0 18px 50px rgba(120,100,140,.18),inset 0 1px 0 rgba(255,255,255,.9)}
+.card,.ticket,.ac,.demo{border-radius:28px}.stat{border-radius:22px}.lt{border-radius:36px;padding:32px 30px}
+.land .rc{background:color-mix(in srgb,var(--card) 60%,transparent);border-radius:20px;box-shadow:0 8px 20px rgba(120,100,140,.12),inset 0 1px 0 #fff}
+.auth{color:var(--ink)}.rc{color:var(--ink)}.auth:before,.auth:after{background:none}
+.wave{display:none}.land{padding-bottom:28px}.lt .ai{color:var(--mute);opacity:1}
+input,select,textarea,.ac input,.ac select{background:color-mix(in srgb,var(--card) 70%,transparent);border:1.5px solid color-mix(in srgb,#fff 85%,var(--line));border-radius:12px;color:var(--ink)}
+.ac input::placeholder{color:var(--mute)}
+.pill{background:var(--brand);color:var(--brand-ink)}.pill:hover{background:color-mix(in srgb,var(--brand) 88%,#000)}
+.lnk{color:var(--brand)}.err{color:var(--bad);text-shadow:none}.demo td{border-color:var(--line)}
+.pperf:before,.pperf:after{background:#f4e4e1}
+.logo i{border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9dc,#f2a07a 65%,#e98b62)}
+.pb+.pperf{margin-top:16px}
+@media (max-width:520px){.rcs{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:no-preference){.toast{animation:up .25s ease-out}@keyframes up{from{opacity:0;transform:translate(-50%,10px)}}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const LV=[['warden','Warden'],['tutor','Tutor'],['hod','HOD'],['principal','Principal'],['hostel_security','Hostel security'],['gate_security','Main gate security']];
+let U=[],newCreds=[],letterData=null,loginRole=null;const DEPTS=['AIDS','CYBER SECURITY','ECE','EEE','IT','CSE','MECH','AUTOMOBILE','CIVIL'];const G={student:['student'],warden:['warden'],tutor:['tutor'],hod:['hod'],principal:['principal'],security:['hostel_security','gate_security'],admin:['admin']};const letterHtml=r=>r.letter?`<details style="margin:8px 0"><summary style="min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600">Handwritten leave letter</summary><img src="${r.letter.data}" alt="Handwritten leave letter" style="max-width:100%;border-radius:10px"></details>`:'';const BH='Boys Hostel',GH='Girls Hostel';
+const roleName=r=>r==='student'?'Student':r==='admin'?'Admin':LV.find(l=>l[0]===r)[1];
+const sha=async s=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),b=>b.toString(16).padStart(2,'0')).join('');
+const save=()=>{try{localStorage.setItem('outpass_v3',JSON.stringify({U,R,nid}))}catch(e){}};
+const pw=()=>{const c='abcdefghjkmnpqrstuvwxyz23456789';return Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>c[b%c.length]).join('')};
+async function mk(x,p){x.id=U.length+1;x.h=await sha(x.uid+':'+p);if(p==='pass@123')x.demo=true;U.push(x);return x}
+// each approver only handles their own students: warden by hostel, tutor and HOD by department
+const canSign=(u,r)=>{const s=user(r.sid),q=LV[r.level-1][0];return r.status==='pending'&&u.role===q&&(q==='warden'?u.hostel===s.hostel:(q==='tutor'||q==='hod')?u.dept===s.dept:true)};
+const scope=(u,r)=>{const s=user(r.sid);return u.id===r.sid||['principal','hostel_security','gate_security'].includes(u.role)||(u.role==='warden'&&u.hostel===s.hostel)||(['tutor','hod'].includes(u.role)&&u.dept===s.dept)};
+async function seed(){const P='pass@123';
+ await mk({uid:'ADMIN',name:'Office Admin',role:'admin'},P);
+ await mk({uid:'selvam@college.edu',name:'Mr. Selvam',role:'warden',hostel:BH},P);
+ await mk({uid:'meena@college.edu',name:'Mrs. Meena Iyer',role:'warden',hostel:GH},P);
+ await mk({uid:'ravi.cse@college.edu',name:'Dr. Ravi S',role:'tutor',dept:'CSE'},P);
+ await mk({uid:'anita.hod.cse@college.edu',name:'Prof. Anita Rao',role:'hod',dept:'CSE'},P);
+ await mk({uid:'latha.ece@college.edu',name:'Dr. Latha M',role:'tutor',dept:'ECE'},P);
+ await mk({uid:'karthik.hod.ece@college.edu',name:'Prof. Karthik N',role:'hod',dept:'ECE'},P);
+ await mk({uid:'principal@college.edu',name:'Dr. Kannan',role:'principal'},P);
+ await mk({uid:'SEC-HOSTEL',name:'Suresh P',role:'hostel_security'},P);
+ await mk({uid:'SEC-GATE',name:'Murugan K',role:'gate_security'},P);
+ await mk({uid:'aarav.22cs101@college.edu',roll:'22CS101',name:'Aarav Kumar',role:'student',dept:'CSE',hostel:BH,room:'214'},P);
+ await mk({uid:'bala.22cs102@college.edu',roll:'22CS102',name:'Bala Subramani',role:'student',dept:'CSE',hostel:BH,room:'215'},P);
+ await mk({uid:'harini.22cs115@college.edu',roll:'22CS115',name:'Harini V',role:'student',dept:'CSE',hostel:GH,room:'108'},P);
+ await mk({uid:'divya.22ec087@college.edu',roll:'22EC087',name:'Divya Nair',role:'student',dept:'ECE',hostel:GH,room:'112'},P);
+ for(const d of DEPTS.filter(d=>!['CSE','ECE'].includes(d))){const s=d.toLowerCase().replace(/ /g,'');await mk({uid:'tutor.'+s+'@college.edu',name:d+' Tutor',role:'tutor',dept:d},P);await mk({uid:'hod.'+s+'@college.edu',name:d+' HOD',role:'hod',dept:d},P)}}
+const lvOf=r=>LV.findIndex(l=>l[0]===r)+1;
+let R=[],me=null,nid=1,scanId=null,fullQR=false,skipWin=true,toastT;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=t=>t?new Date(t).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'–';
+const rnd=n=>Array.from(crypto.getRandomValues(new Uint8Array(n)),b=>b.toString(16).padStart(2,'0')).join('');
+const user=id=>U.find(u=>u.id===id);
+const loc=t=>{const l=new Date(t-new Date().getTimezoneOffset()*6e4);return l.toISOString().slice(0,16)};
+function toast(m){clearTimeout(toastT);let t=document.querySelector('.toast');if(!t){t=document.createElement('div');t.className='toast';t.setAttribute('role','status');document.body.append(t)}t.textContent=m;toastT=setTimeout(()=>t.remove(),3500)}
+
+// pass state: server-side check on every scan
+function check(r){const n=Date.now(),L=new Date(r.leave).getTime(),B=new Date(r.ret).getTime();
+ if(r.status==='revoked')return{s:'bad',t:'INVALID',w:'Revoked by '+r.revBy};
+ if(r.status==='rejected')return{s:'bad',t:'REJECTED',w:'Rejected at '+roleName(LV[r.level-1][0])};
+ if(r.status==='pending')return{s:'warn',t:'NOT ISSUED',w:'Waiting for '+LV[r.level-1][1]};
+ if(r.status==='returned')return{s:'bad',t:'USED',w:'Exit and return already logged'};
+ if(r.status==='out')return n>B?{s:'warn',t:'OVERDUE',w:'Past return-by time',act:'return'}:{s:'ok',t:'VALID',w:'Student is out. Ready for return scan',act:'return'};
+ if(n>B)return{s:'bad',t:'EXPIRED',w:'Never used before return-by time'};
+ if(n<L&&!skipWin)return{s:'bad',t:'INVALID',w:'Not valid before '+fmt(r.leave)};
+ return{s:'ok',t:'VALID',w:'Ready for exit scan',act:'exit'}}
+const find=k=>{k=k.trim().split('#').pop().toUpperCase();return R.find(r=>r.token.toUpperCase()===k||r.code===k)};
+const label=r=>r.status==='pending'?'Level '+r.level+': '+LV[r.level-1][1]:check(r).t;
+
+// actions
+window.doLogin=async()=>{const u=document.getElementById('lid').value.trim().toLowerCase(),p=document.getElementById('lpw').value,e=document.getElementById('lerr'),a=U.find(x=>x.uid.toLowerCase()===u||(x.roll||'').toLowerCase()===u);
+ if(!a||a.h!==await sha(a.uid+':'+p)){e.textContent='ID or password is wrong. Check both and try again.';return}
+ if(!G[loginRole].includes(a.role)){e.textContent='This is not a '+loginRole+' account. Go back and choose the right option.';return}
+ me=a;try{sessionStorage.setItem('op_me',a.uid)}catch(x){}location.hash='';scanId=null;render()};
+window.addUsers=async()=>{const g=i=>document.getElementById(i).value.trim(),role=g('a-role'),dept=g('a-dept').toUpperCase(),host=g('a-host'),names=g('a-names').split('\n').map(s=>s.trim()).filter(Boolean),e=document.getElementById('a-err');
+ if(!names.length){e.textContent='Add at least one name.';return}
+ if(['student','tutor','hod'].includes(role)&&!dept){e.textContent='Enter the department, like CSE.';return}
+ const sec=['hostel_security','gate_security'].includes(role),rows=names.map(l=>{const [n,em]=l.split(',').map(s=>s.trim());return{n,l,uid:(em||'').toLowerCase()}});
+ if(!sec){const bad=rows.find(r=>!/^\S+@\S+\.\S+$/.test(r.uid)||U.some(u=>u.uid.toLowerCase()===r.uid));if(bad){e.textContent='Write one person per line as: Name, college email (not already registered). Check: '+bad.l;return}}
+ const out=[];
+ for(const r of rows){const p=pw(),uid=sec?(role==='gate_security'?'SEC-GATE-':'SEC-HOSTEL-')+(U.filter(u=>u.role===role).length+1):r.uid;
+  const x={uid,name:r.n,role};if(role==='student'){x.dept=dept;x.hostel=host;x.room='';x.roll=uid.split('@')[0].toUpperCase()}if(role==='tutor'||role==='hod')x.dept=dept;if(role==='warden')x.hostel=host;
+  await mk(x,p);out.push({uid,name:r.n,p})}
+ newCreds=out;toast(out.length+' account(s) created.');render()};
+window.pickRole=r=>{loginRole=r;render()};
+window.fill=id=>{document.getElementById('lid').value=id;const p=document.getElementById('lpw');p.value='pass@123';p.focus()};
+window.register=async()=>{const g=i=>document.getElementById(i).value.trim(),name=g('r-name'),roll=g('r-roll').toUpperCase(),em=g('r-mail').toLowerCase(),p=document.getElementById('r-pw').value,dept=g('r-dept'),host=g('r-host'),e=document.getElementById('r-err');
+ if(!name||!roll||!em||!p||!dept||!host){e.textContent='Fill in every field.';return}
+ if(!/^\S+@college\.edu$/.test(em)){e.textContent='Use your college email ending in @college.edu.';return}
+ if(p.length<6){e.textContent='Password needs at least 6 characters.';return}
+ if(U.some(u=>u.uid.toLowerCase()===em||(u.roll||'').toUpperCase()===roll)){e.textContent='This enrollment number or email is already registered. Log in instead.';return}
+ me=await mk({uid:em,roll,name,role:'student',dept,hostel:host,room:''},p);try{sessionStorage.setItem('op_me',em)}catch(x){}toast('Registered. Welcome, '+name.split(' ')[0]+'.');render()};
+window.resetPw=async id=>{const u=user(id),p=pw();u.h=await sha(u.uid+':'+p);delete u.demo;newCreds=[{uid:u.uid,name:u.name,p}];toast('New password set for '+u.name+'.');render()};
+window.logout=()=>{me=null;loginRole=null;try{sessionStorage.removeItem('op_me')}catch(x){}location.hash='';render()};
+window.submitReq=()=>{const g=i=>document.getElementById(i).value.trim();
+ const d={type:g('f-type'),dest:g('f-dest'),reason:g('f-reason'),leave:g('f-leave'),ret:g('f-ret')};
+ const e=document.getElementById('f-err');let m='';
+ if(!d.dest||!d.reason||!d.leave||!d.ret)m='Fill in every field.';
+ else if(!letterData)m='Attach a photo of your handwritten leave letter.';
+ else if(new Date(d.ret)<=new Date(d.leave))m='Return time must be after leave time.';
+ else if(d.type==='Day outing'&&(d.leave.slice(0,10)!==d.ret.slice(0,10)||d.ret.slice(11)>'21:00'))m='Day outpasses must end the same day before the 9:00 pm curfew.';
+ else if(R.some(r=>r.sid===me.id&&['pending','approved','out'].includes(r.status)))m='You already have an open pass. Finish or wait for it first.';
+ if(m){e.textContent=m;return}
+ R.push({id:nid++,sid:me.id,...d,status:'pending',level:1,letter:letterData,trail:[],token:rnd(12),code:'GP'+(1000+Math.floor(Math.random()*9000)),outAt:null,inAt:null});
+ letterData=null;toast('Request sent. Warden notified.');render()};
+window.pickLetter=inp=>{const f=inp.files[0],m=document.getElementById('l-note');letterData=null;if(!f)return;
+ if(!f.type.startsWith('image/')){m.textContent='Upload a photo of the letter (JPG or PNG).';return}
+ const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);letterData={name:f.name,data:c.toDataURL('image/jpeg',.72)};m.textContent='Attached: '+f.name};im.onerror=()=>{m.textContent='Could not read that photo. Try another.'};im.src=URL.createObjectURL(f)};
+window.decide=(id,ok)=>{const r=R.find(x=>x.id===id);if(!r||!canSign(me,r)){toast('You can’t sign this request.');return}
+ const c=(document.getElementById('c'+id)||{}).value||'';
+ if(!ok&&!c.trim()){toast('Add a reason before rejecting.');return}
+ r.trail.push({level:r.level,by:me.name,decision:ok?'approved':'rejected',comment:c,at:Date.now()});
+ if(!ok){r.status='rejected';toast('Rejected. Student notified.')}
+ else if(r.level<6){r.level++;toast(LV[r.level-1][1]+' notified.')}
+ else{r.status='approved';toast('E-outpass issued. QR sent to student.')}
+ render()};
+window.revoke=id=>{const r=R.find(x=>x.id===id);r.status='revoked';r.revBy=me.name;toast('Pass revoked. QR is now invalid.');render()};
+window.mark=(id,a)=>{const r=R.find(x=>x.id===id),c=check(r);if(c.act!==a){toast('Scan refused: '+c.t);return}
+ if(a==='exit'){r.status='out';r.outAt=Date.now()}else{r.status='returned';r.inAt=Date.now()}
+ toast(a==='exit'?'Exit logged.':'Return logged.');render()};
+window.openPass=t=>{location.hash=t};
+window.scan=()=>{const r=find(document.getElementById('code').value);if(!r){scanId=-1;toast('No pass matches that code.')}else scanId=r.id;render()};
+window.toggleFull=()=>{fullQR=!fullQR;render()};
+window.setSkip=v=>{skipWin=v;render()};
+window.theme=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme==='dark'?'light':'dark'};
+
+// views
+const tracker=r=>`<div class="track" aria-label="Approval progress">${LV.map((l,i)=>{const n=i+1;let c=r.status==='rejected'&&r.level===n?'rej':(r.status==='pending'&&r.level===n)?'cur':(n<r.level||(r.status!=='pending'&&r.status!=='rejected')||(r.status==='rejected'&&n<r.level))?'done':'';return`<div class="step ${c}"><b></b>${l[1]}</div>`}).join('')}</div>`;
+const tagFor=r=>{const c=r.status==='pending'?'warn':['approved','out'].includes(r.status)?'ok':['returned'].includes(r.status)?'':'bad';return`<span class="tag ${c}">${esc(label(r))}</span>`};
+
+function loginView(){
+ if(!loginRole)return`<div class="auth land"><div class="hero2"><div class="lt"><h1>Leave campus with one scan.</h1><p class="ai">Six sign-offs, one QR. Choose your role to request, approve or verify a pass.</p><div class="rcs">${[['student','Student','Request and track passes'],['warden','Warden','Approve hostel requests'],['tutor','Tutor','Approve class requests'],['hod','HOD','Approve department requests'],['principal','Principal','Approve and revoke passes'],['security','Security','Scan and verify passes']].map(([k,t,d])=>`<button class="rc" onclick="pickRole('${k}')"><svg width="44" height="44" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 21c0-4.4 3.8-7 8.5-7s8.5 2.6 8.5 7z"/></svg><span>${t}</span><small>${d}</small></button>`).join('')}</div></div>
+<div class="pass3" aria-hidden="true"><div class="pt"><div class="pb">VALID<span>Ready for exit scan</span></div><div class="pperf"></div><div class="pqr">${qrArt()}</div><div class="pcode">GP4821</div><ol class="chain">${['Warden','Tutor','HOD','Principal','Hostel','Gate'].map((t,i)=>`<li style="--i:${i}">${t}</li>`).join('')}</ol></div></div></div>
+<svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,60 C240,120 480,0 720,40 C960,80 1200,110 1440,50 L1440,120 L0,120Z" fill="var(--bg)"/></svg></div>`;
+ const st=loginRole==='student',depts=DEPTS.filter(d=>U.some(u=>u.role==='hod'&&u.dept===d)),hosts=[...new Set(U.filter(u=>u.role==='warden').map(u=>u.hostel))];
+ return`<div class="auth"><div><h1>Welcome</h1><p class="ai">Please log in with your college credentials</p>
+<div class="cols"><div><p class="sm">${st?'Registered student? Log in now':'Log in to continue'}</p><div class="ac"><input id="lid" aria-label="Enrollment number, college email or ID" placeholder="${st?'ENROLLMENT NUMBER':['security','admin'].includes(loginRole)?'USER ID':'COLLEGE EMAIL'}" autocapitalize="none" autocomplete="username"><input id="lpw" type="password" aria-label="Password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><p id="lerr" role="alert" class="err"></p><button class="pill" onclick="doLogin()">Login</button></div><button class="lnk" onclick="toast('Ask your admin to reset your password.')">Forgot password?</button><button class="lnk" onclick="pickRole(null)">Change role</button></div>
+${st?`<div><p class="sm">Still didn’t register? Register here</p><div class="ac"><input id="r-name" aria-label="Full name" placeholder="FULL NAME"><input id="r-roll" aria-label="Enrollment number" placeholder="ENROLLMENT NUMBER"><input id="r-mail" type="email" aria-label="College email" placeholder="Email Address (@college.edu)"><input id="r-pw" type="password" aria-label="Password" placeholder="Password"><select id="r-dept" aria-label="Department"><option value="">Select your department</option>${depts.map(d=>`<option>${esc(d)}</option>`).join('')}</select><select id="r-host" aria-label="Hostel"><option value="">Select your hostel</option>${hosts.map(h=>`<option>${esc(h)}</option>`).join('')}</select><p id="r-err" role="alert" class="err"></p><button class="pill" onclick="register()">Register</button></div></div>`:''}</div>
+<details class="demo" open><summary>Demo accounts (password: pass@123)</summary><table>${U.filter(u=>u.demo&&G[loginRole].includes(u.role)).map(u=>`<tr><td><b>${esc(u.roll||u.uid)}</b></td><td>${esc(u.name)}</td><td>${roleName(u.role)}</td><td><button class="lnk" onclick="fill('${esc(u.roll||u.uid)}')">Use</button></td></tr>`).join('')}</table></details></div></div>`}
+function oldLoginView(){return`<div class="wrap hero"><h1>Outpass</h1><p>Students, wardens, tutors, HODs and the principal sign in with their college email. Security staff use the ID the admin gave them.</p>
+<div class="card" style="max-width:420px"><label for="lid">College email or security ID</label><input id="lid" autocomplete="username" autocapitalize="none" placeholder="name@college.edu"><label for="lpw">Password</label><input id="lpw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><p id="lerr" role="alert" style="color:var(--bad);font-weight:600;margin:8px 0"></p><button onclick="doLogin()">Sign in</button></div>
+<details class="card" style="max-width:420px"><summary style="min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600">Demo accounts (password: pass@123)</summary><table>${U.filter(u=>u.demo).map(u=>`<tr><td><b>${esc(u.uid)}</b></td><td>${esc(u.name)}</td><td class="mute">${roleName(u.role)}${u.dept?' · '+u.dept:''}${u.role==='warden'?' · '+u.hostel:''}</td></tr>`).join('')}</table></details></div>`}
+const qrArt=()=>{let s=7,o='';const r=()=>(s=(s*1103515245+12345)&0x7fffffff)/0x7fffffff;for(let y=0;y<21;y++)for(let x=0;x<21;x++){if((x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12))continue;if(r()>.52)o+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}[[0,0],[14,0],[0,14]].forEach(([a,b])=>o+=`<path fill-rule="evenodd" d="M${a} ${b}h7v7h-7zM${a+1} ${b+1}v5h5v-5zM${a+2} ${b+2}h3v3h-3z"/>`);return`<svg viewBox="0 0 21 21" fill="#0b1a19" shape-rendering="crispEdges">${o}</svg>`};
+function adminView(){return`<div class="wrap"><h2>Accounts</h2>
+<div class="card"><h3>Create IDs and passwords</h3><div class="grid"><div><label for="a-role">Role</label><select id="a-role">${['student','tutor','hod','warden','principal','hostel_security','gate_security'].map(r=>`<option value="${r}">${roleName(r)}</option>`).join('')}</select></div>
+<div><label for="a-dept">Department (student, tutor, HOD)</label><select id="a-dept"><option value="">Select department</option>${DEPTS.map(d=>`<option>${d}</option>`).join('')}</select></div>
+<div><label for="a-host">Hostel (student, warden)</label><select id="a-host"><option>${BH}</option><option>${GH}</option></select></div>
+</div>
+<label for="a-names">One person per line: Name, college email (security: name only)</label><textarea id="a-names" rows="4" placeholder="Aarav Kumar, aarav.22cs101@college.edu"></textarea><p id="a-err" role="alert" style="color:var(--bad);font-weight:600;margin:8px 0"></p><button onclick="addUsers()">Create accounts</button></div>
+${newCreds.length?`<div class="card"><h3>New logins: note these now</h3><p class="mute" style="margin-top:0">Passwords show only once. Give each person their own.</p><table><tr><th>ID</th><th>Name</th><th>Password</th></tr>${newCreds.map(c=>`<tr><td><b>${esc(c.uid)}</b></td><td>${esc(c.name)}</td><td><b>${esc(c.p)}</b></td></tr>`).join('')}</table></div>`:''}
+<div class="card" style="overflow-x:auto"><h3>All users (${U.length})</h3><table><tr><th>ID</th><th>Name</th><th>Role</th><th>Scope</th><th></th></tr>${U.map(u=>`<tr><td>${esc(u.uid)}</td><td>${esc(u.name)}</td><td>${roleName(u.role)}</td><td class="mute">${esc([u.dept,u.hostel].filter(Boolean).join(' · '))}</td><td>${u.role==='admin'?'':`<button class="ghost" onclick="resetPw(${u.id})">Reset password</button>`}</td></tr>`).join('')}</table></div></div>`}
+
+function studentView(){const mine=R.filter(r=>r.sid===me.id).reverse();const n=Date.now();
+ return`<div class="wrap"><div class="ph"><h2>Hello, ${esc(me.name.split(' ')[0])}</h2><p class="mute">${esc(me.dept)} · ${esc(me.hostel)}${me.room?', room '+esc(me.room):''}</p></div><div class="stats"><div class="stat"><b>${mine.length}</b><span>Requests</span></div><div class="stat"><b>${mine.filter(r=>r.status==='pending').length}</b><span>In approval</span></div><div class="stat"><b>${mine.filter(r=>['approved','out'].includes(r.status)).length}</b><span>Active passes</span></div><div class="stat"><b>${mine.filter(r=>r.status==='rejected').length}</b><span>Rejected</span></div></div>
+<details class="card" ${mine.length?'':'open'}><summary style="font-weight:700;min-height:44px;display:flex;align-items:center;cursor:pointer">New outpass request</summary>
+<div class="grid"><div><label for="f-type">Type</label><select id="f-type"><option>Day outing</option><option>Overnight</option><option>Home visit</option><option>Medical</option></select></div>
+<div><label for="f-dest">Destination</label><input id="f-dest" placeholder="Erode bus stand"></div>
+<div><label for="f-leave">Leave at</label><input id="f-leave" type="datetime-local" value="${loc(n+6e5)}"></div>
+<div><label for="f-ret">Return by</label><input id="f-ret" type="datetime-local" value="${loc(n+108e5)}"></div></div>
+<label for="f-reason">Reason</label><textarea id="f-reason" rows="2" placeholder="Buy lab equipment"></textarea>
+<label for="f-letter">Handwritten leave letter (photo)</label><input id="f-letter" type="file" accept="image/*" onchange="pickLetter(this)"><p id="l-note" class="mute" style="margin:6px 0 0">Write the letter on paper, sign it and upload a clear photo.</p><p id="f-err" role="alert" style="color:var(--bad);margin:8px 0;font-weight:600"></p><button onclick="submitReq()">Send request</button></details>
+${mine.length?mine.map(r=>`<div class="card"><div class="row sp"><h3>${esc(r.type)} to ${esc(r.dest)}</h3>${tagFor(r)}</div>
+<div class="mute">${fmt(r.leave)} to ${fmt(r.ret)}</div>${tracker(r)}
+${r.status==='rejected'?`<p class="mute">Reason: ${esc(r.trail.at(-1).comment)}</p>`:''}
+${r.token&&r.status!=='pending'&&r.status!=='rejected'?`<button onclick="openPass('${r.token}')">Open e-outpass</button>`:''}</div>`).join(''):'<div class="card mute">No requests yet. Fill in the form above to start.</div>'}</div>`}
+
+function approverView(){const lv=lvOf(me.role),q=R.filter(r=>canSign(me,r)),sec=lv>=5,act=R.filter(r=>['approved','out'].includes(r.status)&&scope(me,r));
+ return`<div class="wrap"><div class="ph"><h2>${roleName(me.role)} dashboard</h2><p class="mute">${esc([me.dept,me.role==='warden'?me.hostel:''].filter(Boolean).join(' · ')||'All students')}</p></div><div class="stats"><div class="stat"><b>${q.length}</b><span>Waiting for you</span></div><div class="stat"><b>${act.length}</b><span>Active passes</span></div><div class="stat"><b>${R.filter(r=>r.trail.some(t=>t.by===me.name)).length}</b><span>Signed by you</span></div></div>
+${q.map(r=>{const s=user(r.sid);return`<div class="card"><div class="row sp"><h3>${esc(s.name)} <span class="mute">${s.roll} · ${s.hostel}, room ${s.room}</span></h3><span class="tag">${esc(r.type)}</span></div>
+<p style="margin:6px 0">${esc(r.reason)} → ${esc(r.dest)}<br><span class="mute">${fmt(r.leave)} to ${fmt(r.ret)}</span></p>
+${r.trail.length?`<div class="mute">Signed so far: ${r.trail.map(t=>esc(LV[t.level-1][1])).join(', ')}</div>`:''}
+${letterHtml(r)}<label for="c${r.id}">Comment (required to reject)</label><input id="c${r.id}"><div class="row" style="margin-top:10px"><button onclick="decide(${r.id},true)">Approve</button><button class="bad" onclick="decide(${r.id},false)">Reject</button></div></div>`}).join('')||'<div class="card mute">Nothing waiting for you. New requests appear here when they reach your level.</div>'}
+${sec?scanView():''}
+${['warden','principal'].includes(me.role)?`<h2 style="margin-top:22px">Active passes</h2>${act.map(r=>`<div class="card row sp"><span>${esc(user(r.sid).name)} · ${esc(r.dest)} ${tagFor(r)}</span><button class="bad" onclick="revoke(${r.id})">Revoke</button></div>`).join('')||'<p class="mute">No active passes.</p>'}`:''}</div>`}
+
+function actionsFor(r){const c=check(r);return`<div class="verdict ${c.s}"><div style="font:700 1.4rem Lexend">${c.t}</div>${esc(user(r.sid).name)} · ${esc(c.w)}</div>
+${c.act?`<button onclick="mark(${r.id},'${c.act}')">${c.act==='exit'?'Mark exit':'Mark return'}</button>`:''}`}
+function scanView(){const r=R.find(x=>x.id===scanId),out=R.filter(x=>x.status==='out');
+ return`<h2 style="margin-top:22px">Scan a pass</h2><div class="card"><p class="mute" style="margin-top:0">Scan the QR with the camera, or type the backup code (like GP4821).</p>
+<div class="row"><input id="code" placeholder="Backup code or pass link" style="flex:1;min-width:200px" aria-label="Backup code"><button onclick="scan()">Check pass</button></div>
+<label class="row" style="font-weight:400"><input type="checkbox" ${skipWin?'checked':''} onchange="setSkip(this.checked)" style="width:20px;min-height:20px"> Demo: ignore the leave-time window</label>
+${r?actionsFor(r):''}</div>
+<h3>Outside now (${out.length})</h3>${out.length?`<table><tr><th>Student</th><th>Out at</th><th>Due</th></tr>${out.map(x=>`<tr><td>${esc(user(x.sid).name)}</td><td>${fmt(x.outAt)}</td><td>${fmt(x.ret)}</td></tr>`).join('')}</table>`:'<p class="mute">Nobody is outside.</p>'}`}
+
+function passView(tok){const r=find(tok);
+ if(!r)return`<div class="wrap"><div class="ticket"><div class="banner bad">INVALID</div><div class="tbody">This pass link doesn’t match any outpass.<br><button class="ghost" style="margin-top:12px" onclick="location.hash=''">Back</button></div></div></div>`;
+ const s=user(r.sid),c=check(r),mineP=me&&me.id===r.sid,guard=me&&['hostel_security','gate_security'].includes(me.role),full=!!me&&scope(me,r),url=location.href.split('#')[0]+'#'+r.token;
+ return`<div class="wrap"><button class="ghost" onclick="location.hash=''">Back</button>
+<div class="ticket"><div class="banner ${c.s}">${c.t}<span>${esc(c.w)}</span></div>
+<div class="tbody"><h2>${esc(s.name)}</h2>
+${full?`<div class="mute">${s.roll} · ${s.hostel}, room ${s.room}</div>
+<div class="kv"><div><small>Type</small>${esc(r.type)}</div><div><small>Destination</small>${esc(r.dest)}</div><div><small>Leave</small>${fmt(r.leave)}</div><div><small>Return by</small>${fmt(r.ret)}</div><div><small>Exit logged</small>${fmt(r.outAt)}</div><div><small>Return logged</small>${fmt(r.inAt)}</div></div>
+<div class="mute">Reason: ${esc(r.reason)}</div>`:'<p class="mute">Sign in as security staff to see full details.</p>'}</div>
+${mineP&&r.status!=='pending'&&r.status!=='rejected'?`<div class="perf"></div><div class="qr"><div class="box" id="qrbox"></div></div><div class="code">${r.code}</div><div class="row" style="justify-content:center;padding:12px"><button onclick="toggleFull()">Full-screen QR</button><button class="ghost" onclick="window.print()">Save as PDF</button></div>`:''}
+${full?`<div class="perf"></div><div class="tbody"><h3>Approval trail</h3><ul class="trail">${LV.map((l,i)=>{const t=r.trail.find(x=>x.level===i+1);return`<li><span>${l[1]}</span><span class="mute">${t?esc(t.by)+' · '+fmt(t.at)+(t.decision==='rejected'?' (rejected)':''):'–'}</span></li>`}).join('')}</ul>
+${guard?actionsFor(r):''}${me&&['warden','principal'].includes(me.role)&&['approved','out'].includes(r.status)?`<button class="bad" onclick="revoke(${r.id})">Revoke pass</button>`:''}</div>`:''}
+</div></div>
+${fullQR?`<div class="full" onclick="toggleFull()"><div id="qrfull"></div><div class="code">${r.code}</div><div>Tap to close</div></div>`:''}
+<span hidden data-url="${esc(url)}"></span>`}
+
+function render(){if(U.length)save();document.body.classList.toggle('isauth',!location.hash&&!me);const app=document.getElementById('app'),h=location.hash.slice(1);
+ let body=!h&&!me?loginView():h?passView(h):me.role==='student'?studentView():me.role==='admin'?adminView():approverView();
+ app.innerHTML=`<header class="top"><div class="wrap"><div class="logo"><i></i>Outpass</div><div class="row">${me?`<span class="av" aria-hidden="true">${esc(me.name.replace(/^(Dr|Prof|Mr|Mrs)\.\s*/,'').split(' ').map(w=>w[0]).slice(0,2).join(''))}</span><span class="who2"><b>${esc(me.name)}</b><small>${roleName(me.role)}${me.dept?' · '+esc(me.dept):''}</small></span><button class="link" onclick="logout()">Sign out</button>`:''}<button class="link" onclick="theme()" aria-label="Toggle theme">Theme</button></div></div></header><main>${body}</main>`;
+ const u=document.querySelector('[data-url]');
+ if(u&&typeof QRCode!=='undefined'){const mk=(id,sz)=>{const e=document.getElementById(id);if(e)new QRCode(e,{text:u.dataset.url,width:sz,height:sz,correctLevel:QRCode.CorrectLevel.M})};mk('qrbox',200);mk('qrfull',Math.min(340,innerWidth-60))}}
+addEventListener('hashchange',()=>{if(location.hash==='#admin-access'){loginRole='admin';location.hash='';return}fullQR=false;render()});
+(async()=>{let ok=false;try{const d=JSON.parse(localStorage.getItem('outpass_v3')||'null');if(d&&d.U&&d.U.length){U=d.U;R=d.R||[];nid=d.nid||1;ok=true}}catch(e){}
+ if(!ok)await seed();
+ try{const s=sessionStorage.getItem('op_me');if(s)me=U.find(x=>x.uid===s)||null}catch(e){}
+ if(location.hash==='#admin-access'){loginRole='admin';location.hash=''}
+ render()})();
+</script>
+</body>
+</html>
